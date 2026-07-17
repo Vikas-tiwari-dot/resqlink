@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RESQLINK{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+:root{
+    --bg:#04070a;
+    --bg-soft:#060c10;
+    --panel:rgba(5,14,20,0.94);
+    --panel-2:rgba(7,18,26,0.90);
+    --panel-3:rgba(10,22,32,0.85);
+    --line:rgba(0,210,255,0.10);
+    --line-strong:rgba(0,210,255,0.20);
+    --line-glow:rgba(0,210,255,0.35);
+    --text:#c8e8f4;
+    --muted:#5b8fa8;
+    --soft:#3d6478;
+    --white:#e8f4fa;
+    --accent:#00d2ff;
+    --accent-2:#00ff9d;
+    --accent-3:#ff4d6d;
+    --accent-warn:#ffbe00;
+    --success:#00ff9d;
+    --danger:#ff4d6d;
+    --warning:#ffbe00;
+    --glow-cyan:0 0 18px rgba(0,210,255,0.35), 0 0 45px rgba(0,210,255,0.12);
+    --glow-green:0 0 18px rgba(0,255,157,0.4), 0 0 45px rgba(0,255,157,0.12);
+    --glow-red:0 0 18px rgba(255,77,109,0.45), 0 0 45px rgba(255,77,109,0.12);
+    --shadow:0 24px 60px rgba(0,0,0,0.75);
+    --shadow-soft:0 12px 32px rgba(0,0,0,0.55);
+    --radius-xl:20px;
+    --radius-lg:16px;
+    --radius-md:12px;
+    --radius-sm:8px;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+    min-height:100vh;
+    font-family:'Rajdhani', sans-serif;
+    background:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300d2ff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+        radial-gradient(ellipse at 20% 10%, rgba(0,210,255,0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 85%, rgba(0,255,157,0.04) 0%, transparent 35%),
+        linear-gradient(160deg, #04070a 0%, #05101a 50%, #030609 100%);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* Scanlines overlay */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+    );
+    pointer-events:none;
+    z-index:9999;
+}
+
+a{ text-decoration:none; color:inherit; }
+img{ display:block; max-width:100%; }
+
+/* ── APP SHELL ── */
+.app-shell{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:16px;
+    padding:16px;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+    background:linear-gradient(180deg, rgba(4,14,22,0.97), rgba(3,9,15,0.97));
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-xl);
+    padding:22px 18px;
+    box-shadow:var(--shadow-soft), inset 0 1px 0 rgba(0,210,255,0.08);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    position:relative;
+    overflow:hidden;
+}
+
+.sidebar::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:2px;
+    background:linear-gradient(180deg, transparent, var(--accent), transparent);
+    opacity:0.5;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:32px;
+    position:relative;
+}
+
+.brand-logo-wrap{
+    position:relative;
+    width:48px;
+    height:48px;
+    flex-shrink:0;
+}
+
+.brand-logo-wrap img{
+    width:48px;
+    height:48px;
+    object-fit:cover;
+    border-radius:50%;
+    border:1px solid rgba(0,210,255,0.3);
+    position:relative;
+    z-index:1;
+}
+
+.brand-logo-wrap::after{
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:50%;
+    border:1px solid rgba(0,210,255,0.2);
+    animation:pulse-ring 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-ring{
+    0%,100%{ opacity:0.3; transform:scale(1); }
+    50%{ opacity:1; transform:scale(1.08); }
+}
+
+.brand-text h1{
+    font-family:'Orbitron', sans-serif;
+    font-size:20px;
+    letter-spacing:0.18em;
+    font-weight:900;
+    color:var(--white);
+    text-shadow: var(--glow-cyan);
+}
+
+.brand-text p{
+    font-size:10px;
+    color:var(--accent);
+    margin-top:3px;
+    letter-spacing:0.20em;
+    text-transform:uppercase;
+    font-family:'Share Tech Mono', monospace;
+}
+
+.nav-label{
+    font-size:10px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--soft);
+    font-family:'Share Tech Mono', monospace;
+    margin-bottom:10px;
+    padding-left:4px;
+}
+
+.nav-links{
+    display:grid;
+    gap:6px;
+}
+
+.nav-links a{
+    padding:12px 16px;
+    border-radius:10px;
+    color:var(--muted);
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.06em;
+    background:transparent;
+    border:1px solid transparent;
+    transition:0.22s ease;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    position:relative;
+    overflow:hidden;
+}
+
+.nav-links a .nav-icon{
+    width:16px;
+    height:16px;
+    opacity:0.5;
+    transition:0.22s;
+    flex-shrink:0;
+}
+
+.nav-links a::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:2px;
+    background:var(--accent);
+    transform:scaleY(0);
+    transition:0.22s ease;
+    border-radius:0 2px 2px 0;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    background:rgba(0,210,255,0.06);
+    color:var(--accent);
+    border-color:rgba(0,210,255,0.15);
+}
+
+.nav-links a:hover::before,
+.nav-links a.active::before{
+    transform:scaleY(1);
+}
+
+.nav-links a:hover .nav-icon,
+.nav-links a.active .nav-icon{ opacity:1; }
+
+/* sidebar stats */
+.sidebar-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.ss{
+    background:rgba(0,210,255,0.04);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+}
+
+.ss span{
+    display:block;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--soft);
+    font-family:'Share Tech Mono', monospace;
+    margin-bottom:4px;
+}
+
+.ss strong{
+    font-size:16px;
+    font-family:'Orbitron', sans-serif;
+    color:var(--accent);
+    font-weight:700;
+}
+
+.sidebar-footer{
+    padding:16px;
+    border-radius:14px;
+    background:rgba(0,210,255,0.03);
+    border:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+}
+
+.sidebar-footer::before{
+    content:"SYS";
+    position:absolute;
+    right:12px; top:10px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:9px;
+    color:var(--accent);
+    opacity:0.3;
+    letter-spacing:0.2em;
+}
+
+.sidebar-footer h3{
+    font-size:12px;
+    font-family:'Orbitron', sans-serif;
+    letter-spacing:0.12em;
+    color:var(--accent);
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.sidebar-footer p{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+    font-family:'Share Tech Mono', monospace;
+}
+
+/* ── MAIN ── */
+.main{
+    display:grid;
+    grid-template-rows:auto auto 1fr;
+    gap:16px;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+    background:rgba(4,14,22,0.90);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-xl);
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    box-shadow:var(--shadow-soft);
+    position:relative;
+    overflow:hidden;
+}
+
+.topbar::after{
+    content:"";
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+    opacity:0.3;
+}
+
+.topbar-left h2{
+    font-family:'Orbitron', sans-serif;
+    font-size:22px;
+    font-weight:800;
+    color:var(--white);
+    letter-spacing:0.08em;
+    margin-bottom:4px;
+    text-shadow: var(--glow-cyan);
+}
+
+.topbar-left p{
+    color:var(--muted);
+    font-size:13px;
+    font-family:'Share Tech Mono', monospace;
+    letter-spacing:0.04em;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+/* Clock */
+.live-clock{
+    font-family:'Share Tech Mono', monospace;
+    font-size:20px;
+    color:var(--accent);
+    letter-spacing:0.08em;
+    padding:8px 16px;
+    background:rgba(0,210,255,0.06);
+    border:1px solid var(--line-strong);
+    border-radius:8px;
+    text-shadow: 0 0 12px rgba(0,210,255,0.5);
+}
+
+.badge{
+    padding:8px 14px;
+    border-radius:8px;
+    background:rgba(0,210,255,0.05);
+    border:1px solid var(--line-strong);
+    color:var(--accent);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-family:'Share Tech Mono', monospace;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.badge .dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent-2);
+    box-shadow: var(--glow-green);
+    animation:blink 1.4s step-end infinite;
+}
+
+@keyframes blink{
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.2; }
+}
+
+/* ── QUICK STATS ── */
+.quick-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:rgba(4,14,22,0.85);
+    border:1px solid var(--line-strong);
+    border-radius:14px;
+    padding:16px 18px;
+    position:relative;
+    overflow:hidden;
+    transition:0.22s;
+}
+
+.stat:hover{
+    border-color:var(--line-glow);
+    box-shadow: var(--glow-cyan);
+}
+
+.stat::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0;
+    transition:0.22s;
+}
+
+.stat:hover::before{ opacity:0.5; }
+
+.stat span{
+    display:block;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    color:var(--soft);
+    font-family:'Share Tech Mono', monospace;
+    margin-bottom:8px;
+}
+
+.stat strong{
+    font-size:20px;
+    font-family:'Orbitron', sans-serif;
+    color:var(--white);
+    font-weight:700;
+    letter-spacing:0.06em;
+}
+
+.stat .stat-tag{
+    position:absolute;
+    top:12px; right:12px;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--accent-2);
+    box-shadow: var(--glow-green);
+    animation:blink 2s step-end infinite;
+}
+
+/* ── HERO GRID ── */
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.3fr 0.7fr;
+    gap:16px;
+}
+
+/* ── VISUAL PANEL ── */
+.visual-panel{
+    min-height:380px;
+    position:relative;
+    overflow:hidden;
+    border-radius:var(--radius-xl);
+    border:1px solid var(--line-strong);
+    background:#020a0f;
+    box-shadow:var(--shadow);
+}
+
+.visual-panel::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.88), rgba(0,0,0,0.20), transparent 55%),
+        linear-gradient(to right, rgba(0,210,255,0.06), transparent 30%);
+    z-index:2;
+    pointer-events:none;
+}
+
+/* HUD corners */
+.visual-panel .hud-tl,
+.visual-panel .hud-tr,
+.visual-panel .hud-bl,
+.visual-panel .hud-br{
+    position:absolute;
+    width:22px;
+    height:22px;
+    z-index:4;
+}
+
+.visual-panel .hud-tl{
+    top:14px; left:14px;
+    border-top:2px solid var(--accent);
+    border-left:2px solid var(--accent);
+}
+
+.visual-panel .hud-tr{
+    top:14px; right:14px;
+    border-top:2px solid var(--accent);
+    border-right:2px solid var(--accent);
+}
+
+.visual-panel .hud-bl{
+    bottom:60px; left:14px;
+    border-bottom:2px solid var(--accent);
+    border-left:2px solid var(--accent);
+}
+
+.visual-panel .hud-br{
+    bottom:60px; right:14px;
+    border-bottom:2px solid var(--accent);
+    border-right:2px solid var(--accent);
+}
+
+.feed-label{
+    position:absolute;
+    left:22px;
+    bottom:22px;
+    z-index:3;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.feed-label .live-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--danger);
+    box-shadow: var(--glow-red);
+    animation:blink 0.8s step-end infinite;
+}
+
+.feed-label span{
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:#fff;
+    padding:6px 12px;
+    background:rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:6px;
+}
+
+.visual-panel .cam-id{
+    position:absolute;
+    right:22px;
+    top:22px;
+    z-index:3;
+    font-family:'Share Tech Mono', monospace;
+    font-size:10px;
+    color:rgba(255,255,255,0.5);
+    letter-spacing:0.14em;
+}
+
+.visual-panel img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:opacity 0.5s ease;
+    filter:saturate(0.5) brightness(0.6) contrast(1.1);
+}
+
+/* scan line over image */
+.visual-panel .scan-anim{
+    position:absolute;
+    left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, rgba(0,210,255,0.6), transparent);
+    z-index:3;
+    animation:scan 4s linear infinite;
+}
+
+@keyframes scan{
+    0%{ top:-2px; }
+    100%{ top:100%; }
+}
+
+/* ── CONTROL PANEL ── */
+.control-panel{
+    background:linear-gradient(160deg, rgba(4,16,26,0.97), rgba(3,10,18,0.97));
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-xl);
+    padding:24px;
+    box-shadow:var(--shadow-soft);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    position:relative;
+    overflow:hidden;
+}
+
+.control-panel::before{
+    content:"CTRL";
+    position:absolute;
+    right:16px; top:14px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:9px;
+    letter-spacing:0.2em;
+    color:var(--accent);
+    opacity:0.18;
+}
+
+.control-panel h3{
+    font-family:'Orbitron', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:0.12em;
+    color:var(--white);
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+.control-panel p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.65;
+    margin-bottom:22px;
+    font-family:'Share Tech Mono', monospace;
+}
+
+/* ── BUTTON ── */
+button{
+    width:100%;
+    padding:14px 20px;
+    border:1px solid rgba(0,210,255,0.35);
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    font-family:'Orbitron', sans-serif;
+    color:var(--accent);
+    background:rgba(0,210,255,0.07);
+    box-shadow: inset 0 1px 0 rgba(0,210,255,0.1);
+    transition:0.22s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+button::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, transparent, rgba(0,210,255,0.14), transparent);
+    transform:translateX(-100%);
+    transition:0.4s ease;
+}
+
+button:hover{
+    background:rgba(0,210,255,0.14);
+    border-color:var(--accent);
+    box-shadow: var(--glow-cyan);
+    color:#fff;
+    transform:none;
+}
+
+button:hover::before{
+    transform:translateX(100%);
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+/* ── STATUS CARD ── */
+.status-card{
+    margin-top:18px;
+    padding:16px 18px;
+    border-radius:12px;
+    background:rgba(0,210,255,0.04);
+    border:1px solid var(--line-strong);
+    position:relative;
+    overflow:hidden;
+}
+
+.status-card::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity:0.25;
+}
+
+.status-label{
+    font-size:9px;
+    color:var(--soft);
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    font-family:'Share Tech Mono', monospace;
+    margin-bottom:8px;
+}
+
+.status{
+    font-size:15px;
+    font-weight:700;
+    color:var(--accent);
+    font-family:'Share Tech Mono', monospace;
+    letter-spacing:0.06em;
+}
+
+/* blinking cursor after status */
+.status::after{
+    content:"█";
+    animation:blink 1s step-end infinite;
+    margin-left:4px;
+    font-size:12px;
+    opacity:0.7;
+}
+
+/* ── DATA GRID ── */
+.data-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.box{
+    background:linear-gradient(160deg, rgba(4,14,22,0.95), rgba(3,9,15,0.95));
+    border:1px solid var(--line-strong);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:var(--shadow-soft);
+    overflow:hidden;
+    position:relative;
+    transition:0.22s;
+}
+
+.box:hover{
+    border-color:var(--line-glow);
+}
+
+.box::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; width:100%; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(0,210,255,0.35), transparent);
+}
+
+.box h3{
+    font-family:'Orbitron', sans-serif;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.18em;
+    margin-bottom:14px;
+    color:var(--accent);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.box h3::before{
+    content:"";
+    display:inline-block;
+    width:3px;
+    height:14px;
+    background:var(--accent);
+    border-radius:2px;
+    box-shadow: 0 0 8px rgba(0,210,255,0.6);
+}
+
+pre{
+    min-height:210px;
+    background:rgba(0,5,10,0.8);
+    color:var(--accent-2);
+    padding:16px;
+    border-radius:12px;
+    border:1px solid rgba(0,255,157,0.08);
+    font-size:12px;
+    line-height:1.7;
+    overflow:auto;
+    white-space:pre-wrap;
+    word-break:break-word;
+    font-family:'Share Tech Mono', monospace;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+}
+
+pre::-webkit-scrollbar{ width:4px; }
+pre::-webkit-scrollbar-track{ background:transparent; }
+pre::-webkit-scrollbar-thumb{ background:rgba(0,210,255,0.2); border-radius:2px; }
+
+#result{
+    min-height:210px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:rgba(0,5,10,0.8);
+    border:1px solid rgba(0,210,255,0.08);
+    border-radius:12px;
+    padding:24px 20px;
+    color:var(--white);
+    font-size:17px;
+    font-weight:700;
+    line-height:1.5;
+    font-family:'Orbitron', sans-serif;
+    letter-spacing:0.08em;
+    position:relative;
+    overflow:hidden;
+    transition:0.35s ease;
+}
+
+#result .result-icon{
+    font-size:32px;
+    margin-bottom:12px;
+    display:block;
+}
+
+/* radar ring in result */
+#result::before{
+    content:"";
+    position:absolute;
+    width:160px;
+    height:160px;
+    border:1px solid rgba(0,210,255,0.07);
+    border-radius:50%;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    animation:radar-expand 3s ease-out infinite;
+}
+
+#result::after{
+    content:"";
+    position:absolute;
+    width:80px;
+    height:80px;
+    border:1px solid rgba(0,210,255,0.10);
+    border-radius:50%;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    animation:radar-expand 3s 1.5s ease-out infinite;
+}
+
+@keyframes radar-expand{
+    0%{ opacity:0.8; transform:translate(-50%,-50%) scale(0.5); }
+    100%{ opacity:0; transform:translate(-50%,-50%) scale(1.5); }
+}
+
+/* ── HEXGRID DECORATION ── */
+.hex-deco{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+.hex-deco svg{
+    position:absolute;
+    right:-30px; bottom:-30px;
+    width:180px;
+    height:180px;
+    opacity:0.04;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1250px){
+    .data-grid{ grid-template-columns:1fr; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .quick-stats{ grid-template-columns:repeat(2,1fr); }
+}
+
+@media (max-width: 980px){
+    .app-shell{ grid-template-columns:1fr; }
+    .sidebar{ padding:18px; }
+    .nav-links{ grid-template-columns:repeat(2,1fr); }
+}
+
+@media (max-width: 640px){
+    .app-shell{ padding:10px; gap:10px; }
+    .topbar{ padding:16px; flex-direction:column; align-items:flex-start; }
+    .topbar-left h2{ font-size:16px; }
+    .quick-stats{ grid-template-columns:1fr 1fr; }
+    .nav-links{ grid-template-columns:1fr; }
+    .control-panel,.box,.visual-panel,.topbar,.sidebar{ border-radius:14px; }
+    button{ width:100%; }
+    #result,pre{ min-height:150px; }
+    .live-clock{ font-size:15px; }
+}
+</style>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <div class="brand-logo-wrap">
+                    <img src="adwitiya.jpg" alt="NIRIS logo">
+                </div>
+                <div class="brand-text">
+                    <h1>NIRIS</h1>
+                    <p>Response Intelligence</p>
+                </div>
+            </div>
+
+            <p class="nav-label">Navigation</p>
+            <nav class="nav-links">
+                <a href="#" class="active">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    Dashboard
+                </a>
+                <a href="#">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Incidents
+                </a>
+                <a href="#">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Help
+                </a>
+                <a href="#">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    Register
+                </a>
+            </nav>
+
+            <div class="sidebar-stats">
+                <div class="ss">
+                    <span>Uptime</span>
+                    <strong id="uptime-val">00h</strong>
+                </div>
+                <div class="ss">
+                    <span>Nodes</span>
+                    <strong>04</strong>
+                </div>
+                <div class="ss">
+                    <span>Events</span>
+                    <strong id="event-count">0</strong>
+                </div>
+                <div class="ss">
+                    <span>Ping</span>
+                    <strong id="ping-val">—</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <h3>System Overview</h3>
+            <p>Real-time vehicle pattern monitoring and emergency-response decision support.</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <div class="topbar-left">
+                <h2>ResQLink Control Center</h2>
+                <p>// ACCIDENT DETECTION · LIVE SPEED & FREQUENCY ANALYSIS</p>
+            </div>
+
+            <div class="topbar-right">
+                <div class="live-clock" id="clock">00:00:00</div>
+                <div class="badge"><span class="dot"></span> 24/7 Monitoring</div>
+                <div class="badge"><span class="dot"></span> Feed Active</div>
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat">
+                <span class="stat-tag"></span>
+                <span>System Mode</span>
+                <strong>AUTO</strong>
+            </div>
+            <div class="stat">
+                <span class="stat-tag"></span>
+                <span>Feed Status</span>
+                <strong>LIVE</strong>
+            </div>
+            <div class="stat">
+                <span class="stat-tag"></span>
+                <span>Response Link</span>
+                <strong>READY</strong>
+            </div>
+            <div class="stat">
+                <span class="stat-tag"></span>
+                <span>Alert Engine</span>
+                <strong>ON</strong>
+            </div>
+        </div>
+
+        <div class="hero-grid">
+            <div class="visual-panel">
+                <div class="hud-tl"></div>
+                <div class="hud-tr"></div>
+                <div class="hud-bl"></div>
+                <div class="hud-br"></div>
+                <div class="scan-anim"></div>
+                <div class="cam-id">CAM-01 · NODE-A</div>
+                <div class="feed-label">
+                    <div class="live-dot"></div>
+                    <span>Live Emergency Feed</span>
+                </div>
+                <img id="slider" src="https://cdn.wallpapersafari.com/63/67/Mvc6SX.jpg" alt="Emergency response scene">
+            </div>
+
+            <div class="control-panel rightform">
+
+                {% block content %}
+
+                <div>
+                    <h3>Control Panel</h3>
+                    <p>Initialize monitoring to collect real-time speed and frequency data and evaluate accident probability.</p>
+
+                    <button onclick="startSystem()">▶️ &nbsp;Initialize System</button>
+
+                    <div class="status-card">
+                        <div class="status-label">// Current Status</div>
+                        <div class="status" id="status">System Idle</div>
+                    </div>
+
+                    <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="status-card" style="margin-top:0">
+                            <div class="status-label">// Samples</div>
+                            <div class="status" id="sample-count" style="font-size:13px">0 / 30</div>
+                        </div>
+                        <div class="status-card" style="margin-top:0">
+                            <div class="status-label">// Alerts</div>
+                            <div class="status" id="alert-count" style="font-size:13px; color:var(--danger)">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endblock %}
+
+            </div>
+        </div>
+
+        <div class="data-grid dashboard">
+            <div class="box">
+                <div class="hex-deco">
+                    <svg viewBox="0 0 100 100"><polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor"/></svg>
+                </div>
+                <h3>Speed Data</h3>
+                <pre id="speed">[]</pre>
+            </div>
+
+            <div class="box">
+                <div class="hex-deco">
+                    <svg viewBox="0 0 100 100"><polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor"/></svg>
+                </div>
+                <h3>Frequency Data</h3>
+                <pre id="frequency">[]</pre>
+            </div>
+
+            <div class="box">
+                <div class="hex-deco">
+                    <svg viewBox="0 0 100 100"><polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor"/></svg>
+                </div>
+                <h3>Result</h3>
+                <div id="result">
+                    <span class="result-icon">◎</span>
+                    Waiting...
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+// ── IMAGE SLIDER (unchanged logic) ──
+const images = [
+    "https://cdn.wallpapersafari.com/63/67/Mvc6SX.jpg",
+    "https://static.vecteezy.com/system/resources/thumbnails/042/665/494/small/ai-generated-crash-of-two-cars-close-up-road-accident-concept-generative-ai-photo.jpg",
+    "https://png.pngtree.com/thumb_back/fh260/background/20241202/pngtree-a-dramatic-car-crash-on-the-road-showing-vehicle-wreckage-and-image_16718957.jpg"
+];
+
+let index = 0;
+const slider = document.getElementById("slider");
+
+setInterval(() => {
+    slider.style.opacity = 0;
+    setTimeout(() => {
+        index = (index + 1) % images.length;
+        slider.src = images[index];
+        slider.style.opacity = 1;
+    }, 500);
+}, 5000);
+
+// ── LIVE CLOCK ──
+function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById("clock").textContent = h + ":" + m + ":" + s;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── UPTIME ──
+let uptimeSeconds = 0;
+setInterval(() => {
+    uptimeSeconds++;
+    const h = String(Math.floor(uptimeSeconds / 3600)).padStart(2,'0');
+    const m = String(Math.floor((uptimeSeconds % 3600) / 60)).padStart(2,'0');
+    document.getElementById("uptime-val").textContent = h + "h" + m + "m";
+}, 1000);
+
+// ── SIMULATED PING ──
+setInterval(() => {
+    const ping = Math.floor(Math.random() * 20 + 8);
+    document.getElementById("ping-val").textContent = ping + "ms";
+}, 3000);
+
+// ── EVENT COUNTER ──
+let totalEvents = 0;
+
+// ── START SYSTEM (unchanged backend call) ──
+function startSystem() {
+    fetch('/start_system', { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("status").innerText = "System Started...";
+    });
+}
+
+// ── LIVE DATA FETCH (unchanged backend call, enhanced UI) ──
+setInterval(() => {
+    fetch('/get_output')
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("speed").innerText = JSON.stringify(data.speed, null, 2);
+        document.getElementById("frequency").innerText = JSON.stringify(data.frequency, null, 2);
+
+        // Sample counter
+        const samples = data.speed.length;
+        document.getElementById("sample-count").innerText = samples + " / 30";
+
+        // STATUS LOGIC (unchanged)
+        if (data.speed.length < 30) {
+            document.getElementById("status").innerText = "Gathering data...";
+        } else {
+            document.getElementById("status").innerText = "Analyzing...";
+        }
+
+        // RESULT (unchanged logic, enhanced display)
+        const resultEl = document.getElementById("result");
+        if (data.accidents > 0) {
+            totalEvents++;
+            document.getElementById("event-count").innerText = totalEvents;
+            document.getElementById("alert-count").innerText = totalEvents;
+            resultEl.innerHTML = '<span class="result-icon">⚠</span>Accident Detected!<br><small style="font-size:11px;opacity:0.7;font-family:\'Share Tech Mono\'">Calling hospital...</small>';
+            resultEl.style.color = "var(--danger)";
+            resultEl.style.borderColor = "rgba(255,77,109,0.25)";
+            resultEl.style.boxShadow = "var(--glow-red)";
+        } else if (data.speed.length === 30) {
+            resultEl.innerHTML = '<span class="result-icon">✓</span>No Accident Detected';
+            resultEl.style.color = "var(--accent-2)";
+            resultEl.style.borderColor = "rgba(0,255,157,0.2)";
+            resultEl.style.boxShadow = "var(--glow-green)";
+        } else {
+            resultEl.innerHTML = '<span class="result-icon">◎</span>Waiting...';
+            resultEl.style.color = "var(--white)";
+            resultEl.style.borderColor = "rgba(0,210,255,0.08)";
+            resultEl.style.boxShadow = "none";
+        }
+
+    });
+}, 1000);
+</script>
+
+</body>
+</html>
